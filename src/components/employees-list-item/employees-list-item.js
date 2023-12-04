@@ -1,5 +1,4 @@
 import { Component } from "react";
-
 import "./employees-list-item.css";
 
 class EmployeesListItem extends Component {
@@ -17,7 +16,7 @@ class EmployeesListItem extends Component {
     }));
   };
 
-  starHandler = () => {
+  onRise = () => {
     this.setState(({ isStar }) => ({
       isStar: !isStar,
     }));
@@ -38,7 +37,7 @@ class EmployeesListItem extends Component {
 
     return (
       <li className={classNames}>
-        <span className="list-group-item-label" onClick={this.starHandler}>
+        <span className="list-group-item-label" onClick={this.onRise}>
           {name}
         </span>
         <input
@@ -51,6 +50,7 @@ class EmployeesListItem extends Component {
             type="button"
             className="btn-cookie btn-sm "
             onClick={this.onIncrease}
+            data-toggle="increase"
           >
             <i className="fas fa-cookie"></i>
           </button>
