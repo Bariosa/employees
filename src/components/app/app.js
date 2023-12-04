@@ -17,15 +17,15 @@ class App extends Component {
           name: "Maria G.",
           salary: 800,
           increase: false,
-
+          isStar: true,
           id: 1,
         },
-        { name: "Anna L.", salary: 3000, increase: true, id: 2 },
+        { name: "Anna L.", salary: 3000, increase: true, isStar: false, id: 2 },
         {
           name: "Diana S.",
           salary: 1500,
           increase: false,
-
+          isStar: false,
           id: 3,
         },
       ],
@@ -57,6 +57,40 @@ class App extends Component {
     });
   };
 
+  // onToggleIncrease = (id) => {
+  //   this.setState(({ data }) => ({
+  //     data: data.map((item) => {
+  //       if (item.id === id) {
+  //         return { ...item, increase: !item.increase };
+  //       }
+  //       return item;
+  //     }),
+  //   }));
+  // };
+  //
+
+  // onToggleRise = (id) => {
+  //   this.setState(({ data }) => ({
+  //     data: data.map((item) => {
+  //       if (item.id === id) {
+  //         return { ...item, isStar: !item.isStar };
+  //       }
+  //       return item;
+  //     }),
+  //   }));
+  // };
+
+  onToggleProp = (id, prop) => {
+    this.setState(({ data }) => ({
+      data: data.map((item) => {
+        if (item.id === id) {
+          return { ...item, [prop]: !item[prop] };
+        }
+        return item;
+      }),
+    }));
+  };
+
   render() {
     const employees = this.state.data.length;
     const increased = this.state.data.filter((item) => item.increase).length;
@@ -70,7 +104,11 @@ class App extends Component {
           <AppFilter />
         </div>
 
-        <EmployeesList data={this.state.data} onDelete={this.deleteItem} />
+        <EmployeesList
+          data={this.state.data}
+          onDelete={this.deleteItem}
+          onToggleProp={this.onToggleProp}
+        />
         <EmployeesAddForm newEmployee={this.addItem} />
       </div>
     );

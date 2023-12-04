@@ -18,6 +18,14 @@ class EmployeesAddForm extends Component {
 
   formSubmit = (e) => {
     e.preventDefault();
+    if (
+      this.state.name.trim() === "" ||
+      this.state.name.length <= 3 ||
+      this.state.salary.trim() === "" ||
+      this.state.salary < 0
+    )
+      return;
+
     this.props.newEmployee({
       name: this.state.name,
       salary: this.state.salary,
