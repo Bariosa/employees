@@ -31,6 +31,7 @@ class App extends Component {
       ],
 
       term: "",
+      filter: "all",
     };
   }
 
@@ -59,29 +60,6 @@ class App extends Component {
     });
   };
 
-  // onToggleIncrease = (id) => {
-  //   this.setState(({ data }) => ({
-  //     data: data.map((item) => {
-  //       if (item.id === id) {
-  //         return { ...item, increase: !item.increase };
-  //       }
-  //       return item;
-  //     }),
-  //   }));
-  // };
-  //
-
-  // onToggleRise = (id) => {
-  //   this.setState(({ data }) => ({
-  //     data: data.map((item) => {
-  //       if (item.id === id) {
-  //         return { ...item, isStar: !item.isStar };
-  //       }
-  //       return item;
-  //     }),
-  //   }));
-  // };
-
   onToggleProp = (id, prop) => {
     this.setState(({ data }) => ({
       data: data.map((item) => {
@@ -107,11 +85,42 @@ class App extends Component {
     this.setState({ term });
   };
 
+  filterPost = (items, filter) => {
+    switch (filter) {
+      case "rise":
+        return items.filter((item) => item.isStar);
+      case "moreThen1000":
+        return items.filter((item) => item.salary > 1000);
+      default:
+        return items;
+    }
+  };
+
+  onFilterSelect = (filter) => {
+    this.setState({ filter });
+  };
+
+  salaryChange = (id, newSalary) => {
+    // Делаем проверку что newSalary не меньше нуля
+    if (newSalary < 0) return;
+
+    // Подготавливаем новый массив data
+    const newData = this.state.data.map((employee) => {
+      if (employee.id === id) employee.salary = newSalary;
+      return employee;
+    });
+
+    // Применяем новый массив data для нашего "глобального" стейта
+    this.setState(() => {
+      return { ...this.state, data: newData };
+    });
+  };
+
   render() {
-    const { data, term } = this.state;
+    const { data, term, filter } = this.state;
     const employees = this.state.data.length;
     const increased = this.state.data.filter((item) => item.increase).length;
-    const visibleData = this.searchEmp(data, term);
+    const visibleData = this.filterPost(this.searchEmp(data, term), filter);
 
     return (
       <div className="app">
@@ -119,13 +128,14 @@ class App extends Component {
 
         <div className="search-panel">
           <SearchPanel onUpdateSearch={this.onUpdateSearch} />
-          <AppFilter />
+          <AppFilter filter={filter} onFilterSelect={this.onFilterSelect} />
         </div>
 
         <EmployeesList
           data={visibleData}
           onDelete={this.deleteItem}
           onToggleProp={this.onToggleProp}
+          salaryChange={this.salaryChange}
         />
         <EmployeesAddForm newEmployee={this.addItem} />
       </div>
